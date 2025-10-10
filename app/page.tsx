@@ -69,7 +69,8 @@ export default function Page(){
         <Card>
           <CardHeader><CardTitle>Today’s Plan</CardTitle></CardHeader>
           <CardContent className="space-y-3">
-            <Textarea value={note} onChange={e=>setNote(e.target.value)} />
+            {/* FIX 1: add event type for Textarea */}
+            <Textarea value={note} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>)=>setNote(e.target.value)} />
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm"><span>Savings adherence</span><span>{progress}%</span></div>
               <Progress value={progress}/>
@@ -144,7 +145,8 @@ function Stat({label, value}:{label:string; value:string}){
   return <div className="rounded-xl p-3 bg-slate-900/40"><div className="text-xs opacity-70">{label}</div><div className="text-2xl font-semibold">{value}</div></div>
 }
 function Num({label, value, setValue}:{label:string; value:number; setValue:(n:number)=>void}){
-  return <div><div className="text-xs opacity-70 mb-1">{label}</div><Input type="number" value={value} onChange={e=>setValue(parseFloat(e.target.value||'0'))}/></div>
+  // FIX 2: add event type for Input
+  return <div><div className="text-xs opacity-70 mb-1">{label}</div><Input type="number" value={value} onChange={(e: React.ChangeEvent<HTMLInputElement>)=>setValue(parseFloat(e.target.value||'0'))}/></div>
 }
 function Info({title, value}:{title:string; value:string}){
   return <div className="rounded-xl p-3 bg-slate-900/40"><div className="text-xs opacity-70">{title}</div><div className="text-xl font-semibold">{value}</div></div>
