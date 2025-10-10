@@ -24,12 +24,11 @@ jobs:
         with:
           node-version: '18'
 
-      # Use npm install instead of npm ci (no lockfile needed)
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Build & export static site
-        run: npm run export
+      - name: Build static site (Next 15)
+        run: npm run build   # produces ./out because next.config.mjs has output:'export'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
