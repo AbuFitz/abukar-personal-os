@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+html, body, #__next { height: 100%; }
+body { @apply bg-slate-950 text-slate-100; }
+.container { @apply max-w-7xl mx-auto px-4; }
+.card { @apply rounded-2xl border border-slate-800/50 bg-slate-900/60; }
+a { @apply text-sky-400 underline; }
