@@ -6,7 +6,6 @@ import { Input } from '../components/ui/input'
 import { Textarea } from '../components/ui/textarea'
 import { Badge } from '../components/ui/badge'
 import { Progress } from '../components/ui/progress'
-import { ResponsiveContainer, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, Line } from 'recharts'
 
 function useLocal<T>(key:string, initial:T){
   const [mounted,setMounted]=React.useState(false)
@@ -20,24 +19,24 @@ function currency(n:number){ return n.toLocaleString('en-GB',{style:'currency',c
 export default function Page(){
   const [mounted,setMounted]=React.useState(false); React.useEffect(()=>setMounted(true),[]); if(!mounted) return null;
 
+  // Finance inputs
   const [salary,setSalary]=useLocal<number>('fin.salary',2200)
   const [bills,setBills]=useLocal<number>('fin.bills',450)
   const [target,setTarget]=useLocal<number>('fin.target',10000)
   const [months,setMonths]=useLocal<number>('fin.months',12)
 
+  // Study + notes
   const [studyHrs,setStudyHrs]=useLocal<number>('study.hrs',0)
   const [note,setNote]=useLocal<string>('daily.note','One priority for today…')
 
   const free = Math.max(0, salary - bills)
   const needPerMonth = Math.ceil(target / months)
-  const chart = Array.from({length: months}, (_,i)=>{
-    const saved = Math.min(target, (i+1)*Math.round(free*0.35))
-    return { name: new Date(0, i).toLocaleString('en-GB',{month:'short'}), Saved: saved, Target: (target/months)*(i+1) }
-  })
-  const progress = Math.min(100, Math.round((free*0.35)/needPerMonth*100))
+  const savedThisMonth = Math.round(free * 0.35)
+  const progress = Math.min(100, Math.round(savedThisMonth/needPerMonth*100))
 
   return (
     <div className="container space-y-4">
+      {/* Row 1: Overview (safe, no external charts) */}
       <div className="grid md:grid-cols-3 gap-4">
         <Card className="md:col-span-2">
           <CardHeader><CardTitle>Personal Growth Overview</CardTitle></CardHeader>
@@ -48,28 +47,30 @@ export default function Page(){
               <Stat label="Study logged" value={`${studyHrs}h`} />
               <Stat label="Discipline mode" value="ON" />
             </div>
-            <div className="h-44">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chart}>
-                  <defs>
-                    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.6}/>
-                      <stop offset="95%" stopColor="#38bdf8" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.2}/>
-                  <XAxis dataKey="name" stroke="#94a3b8" /><YAxis stroke="#94a3b8" /><Tooltip />
-                  <Area type="monotone" dataKey="Saved" stroke="#38bdf8" fill="url(#g1)" />
-                  <Line type="monotone" dataKey="Target" stroke="#22c55e" strokeWidth={2} />
-                </AreaChart>
-              </ResponsiveContainer>
+
+            {/* Simple inline “sparkline” using divs instead of Recharts */}
+            <div className="mt-2">
+              <div className="text-xs opacity-70 mb-1">Savings vs Target (next {months} months)</div>
+              <div className="flex gap-1">
+                {Array.from({length: months}).map((_,i)=>{
+                  const planned = needPerMonth
+                  const hypothetical = Math.min(target, (i+1)*savedThisMonth) - Math.min(target, i*savedThisMonth)
+                  const pct = Math.min(100, Math.round((hypothetical/planned)*100))
+                  return (
+                    <div key={i} className="w-full h-8 bg-slate-900/50 rounded-md overflow-hidden border border-slate-800">
+                      <div className="h-full bg-sky-500" style={{width:`${pct}%`}}/>
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="text-xs mt-1 opacity-70">Blue ≈ planned monthly savings at 35% of free cash.</div>
             </div>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader><CardTitle>Today’s Plan</CardTitle></CardHeader>
           <CardContent className="space-y-3">
-            {/* FIX 1: add event type for Textarea */}
             <Textarea value={note} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>)=>setNote(e.target.value)} />
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm"><span>Savings adherence</span><span>{progress}%</span></div>
@@ -79,6 +80,7 @@ export default function Page(){
         </Card>
       </div>
 
+      {/* Row 2: Finance & Faith */}
       <div className="grid md:grid-cols-3 gap-4">
         <Card className="md:col-span-2">
           <CardHeader><CardTitle>Finance Planner</CardTitle></CardHeader>
@@ -95,6 +97,7 @@ export default function Page(){
             </div>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader><CardTitle>Prayer Snapshot (London)</CardTitle></CardHeader>
           <CardContent className="space-y-2 text-sm">
@@ -108,6 +111,7 @@ export default function Page(){
         </Card>
       </div>
 
+      {/* Row 3: Study & Trading */}
       <div className="grid md:grid-cols-3 gap-4">
         <Card className="md:col-span-2">
           <CardHeader><CardTitle>Study — Cloud Path</CardTitle></CardHeader>
@@ -125,6 +129,7 @@ export default function Page(){
             </div>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader><CardTitle>Trading Rules</CardTitle></CardHeader>
           <CardContent className="text-sm">
@@ -145,7 +150,6 @@ function Stat({label, value}:{label:string; value:string}){
   return <div className="rounded-xl p-3 bg-slate-900/40"><div className="text-xs opacity-70">{label}</div><div className="text-2xl font-semibold">{value}</div></div>
 }
 function Num({label, value, setValue}:{label:string; value:number; setValue:(n:number)=>void}){
-  // FIX 2: add event type for Input
   return <div><div className="text-xs opacity-70 mb-1">{label}</div><Input type="number" value={value} onChange={(e: React.ChangeEvent<HTMLInputElement>)=>setValue(parseFloat(e.target.value||'0'))}/></div>
 }
 function Info({title, value}:{title:string; value:string}){
