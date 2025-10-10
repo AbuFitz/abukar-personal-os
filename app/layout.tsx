@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </nav>
           </div>
         </header>
-        <main className="py-6">{children}</main>
+        <main className="py-6 min-h-[70vh]">{children}</main>
         <footer className="border-t border-slate-800/40 text-xs opacity-70 text-center py-6">
           © {new Date().getFullYear()} Abukar • Personal OS
         </footer>

@@ -1,13 +1,11 @@
 {
   "name": "abukar-personal-os",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
-    "export": "next build && next export",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
     "framer-motion": "^11.2.6",
