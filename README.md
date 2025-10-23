@@ -1,1 +1,0 @@
-Abukar Personal OS v2 — Pages-ready. Push to repo and enable Pages via Actions.
