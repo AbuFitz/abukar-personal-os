@@ -1,1 +1,0 @@
-export function Progress({value=0}:{value:number}){return <div className='w-full h-2 bg-slate-800 rounded-full overflow-hidden'><div className='h-full bg-emerald-500' style={{width:`${value}%`}}/></div>}

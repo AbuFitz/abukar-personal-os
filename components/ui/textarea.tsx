@@ -1,1 +1,0 @@
-export function Textarea(props:any){return <textarea {...props} className={`input min-h-[120px] ${props.className||''}`} />}

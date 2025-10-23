@@ -1,1 +1,0 @@
-export function Badge({children,className=''}:any){return <span className={`badge ${className}`}>{children}</span>}
