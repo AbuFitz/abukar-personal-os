@@ -1,6 +1,6 @@
-import { createServerSupabase } from "./lib/supabaseClient";
-import LogWorkout from "./components/LogWorkout";
-import LogFinance from "./components/LogFinance";
+import { createServerSupabase } from "../../lib/supabaseClient";
+import LogWorkout from "../../components/LogWorkout";
+import LogFinance from "../../components/LogFinance";
 
 export default async function Dashboard() {
   const supabase = createServerSupabase();
