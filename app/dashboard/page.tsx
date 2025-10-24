@@ -1,4 +1,4 @@
-import { createServerSupabase } from "@/lib/supabaseClient";
+import { createServerSupabase } from "./lib/supabaseClient";
 import LogWorkout from "@/components/LogWorkout";
 import LogFinance from "@/components/LogFinance";
 
