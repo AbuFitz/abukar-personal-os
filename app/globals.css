@@ -1,5 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 :root { color-scheme: dark; }
 body { @apply bg-[#0B0B0C] text-white; }
